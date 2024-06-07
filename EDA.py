@@ -1,0 +1,125 @@
+import pandas as pd
+import plotly_express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+from ydata_profiling import ProfileReport
+from sklearn.preprocessing import PowerTransformer
+from sklearn.pipeline import Pipeline,make_pipeline	 #for pipeline
+from sklearn.compose import ColumnTransformer		 #for transformers
+from sklearn.model_selection import train_test_split
+
+#load the data
+heart_df=pd.read_csv('data/heart.csv')
+heart_df.info()
+#create profile report to understand the data
+#prof = ProfileReport(heart_df)
+#prof.to_file(output_file='output.html')
+#Draw a 3D scatter plot with 'sex', 'cp', 'trestbps' features
+heart_3D= heart_df.drop(['age','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal'], axis='columns')
+fig= px.scatter_3d(data_frame=heart_3D,\
+                   x='sex',
+                   y='cp',
+                   z='trestbps',
+                   color='target')
+fig.update_layout(margin=dict(l=20,r=20,b=20))
+fig.show()
+# #draw a heatmap of all features correlation coefficients
+# plt.figure("Correlation Heat map",figsize=(80,80))
+# sns.heatmap(heart_df.corr())
+# plt.show()
+# #draw distribution plot for all the variablles
+# fig, ax = plt.subplots(figsize=(40,50))
+# fig.canvas.manager.set_window_title('Original PDF')
+# plt.subplot(4,3,1)
+# sns.kdeplot(data=heart_df,x='age',hue='target')
+# plt.title("Age PDF")
+# plt.subplot(4,3,2)
+# sns.kdeplot(data=heart_df,x='sex',hue='target')
+# plt.title("Sex PDF")
+# plt.subplot(4,3,3)
+# sns.kdeplot(data=heart_df,x='cp',hue='target')
+# plt.title("cp PDF")
+# plt.subplot(4,3,4)
+# sns.kdeplot(data=heart_df,x='trestbps',hue='target')
+# plt.title("trestbps PDF")
+# plt.subplot(4,3,5)
+# sns.kdeplot(data=heart_df,x='chol',hue='target')
+# plt.title("chol PDF")
+# plt.subplot(4,3,6)
+# sns.kdeplot(data=heart_df,x='fbs',hue='target')
+# plt.title("fbs PDF")
+# plt.subplot(4,3,7)
+# sns.kdeplot(data=heart_df,x='restecg',hue='target')
+# plt.title("restecg PDF")
+# plt.subplot(4,3,8)
+# sns.kdeplot(data=heart_df,x='thalach',hue='target')
+# plt.title("thalach PDF")
+# plt.subplot(4,3,9)
+# sns.kdeplot(data=heart_df,x='exang',hue='target')
+# plt.title("exang PDF")
+# plt.subplot(4,3,10)
+# sns.kdeplot(data=heart_df,x='oldpeak',hue='target')
+# plt.title("oldpeak PDF")
+# plt.subplot(4,3,11)
+# sns.kdeplot(data=heart_df,x='slope',hue='target')
+# plt.title("slope PDF")
+# plt.subplot(4,3,12)
+# sns.kdeplot(data=heart_df,x='ca',hue='target')
+# plt.title("ca PDF")
+# plt.show()
+# #split data in training and test set
+# X_train,X_test,y_train,y_test = train_test_split(heart_df.drop(columns=['target']),
+#                                                  heart_df['target'],test_size=0.2,random_state=20)
+# #normalize the data using yeo-johnson power transformer
+# power_transformer= ColumnTransformer([
+#     ('yeo_john_trans',PowerTransformer(standardize=True,copy=False),[0,1,2,3,4,5,6,7,8,9,10,11,12])
+# ],remainder='passthrough')
+# pipe= make_pipeline(power_transformer)
+# pipe.set_output(transform="pandas")
+# X_train_transformed=pipe.fit_transform(X_train)
+# X_test_transformed=pipe.transform(X_test)
+# print("X_train",X_train.head())
+# print("y_train",y_train.head())
+# X_train_target = pd.concat([X_train_transformed,y_train], axis=1)
+# print("X_train_transformed",X_train_transformed.head())
+# print("X_train_target",X_train_target.head())
+# #After normalization draw distribution plot for all the variablles again
+# fig, ax = plt.subplots(figsize=(40,50))
+# fig.canvas.manager.set_window_title('After Yeo-Johnson transformation PDF')
+# plt.subplot(4,3,1)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__age',hue='target')
+# plt.title("Age PDF")
+# plt.subplot(4,3,2)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__sex',hue='target')
+# plt.title("Sex PDF")
+# plt.subplot(4,3,3)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__cp',hue='target')
+# plt.title("cp PDF")
+# plt.subplot(4,3,4)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__trestbps',hue='target')
+# plt.title("trestbps PDF")
+# plt.subplot(4,3,5)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__chol',hue='target')
+# plt.title("chol PDF")
+# plt.subplot(4,3,6)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__fbs',hue='target')
+# plt.title("fbs PDF")
+# plt.subplot(4,3,7)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__restecg',hue='target')
+# plt.title("restecg PDF")
+# plt.subplot(4,3,8)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__thalach',hue='target')
+# plt.title("thalach PDF")
+# plt.subplot(4,3,9)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__exang',hue='target')
+# plt.title("exang PDF")
+# plt.subplot(4,3,10)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__oldpeak',hue='target')
+# plt.title("oldpeak PDF")
+# plt.subplot(4,3,11)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__slope',hue='target')
+# plt.title("slope PDF")
+# plt.subplot(4,3,12)
+# sns.kdeplot(data=X_train_target,x='yeo_john_trans__ca',hue='target')
+# plt.title("ca PDF")
+# plt.show()
